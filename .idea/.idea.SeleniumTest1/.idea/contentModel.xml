@@ -23,8 +23,16 @@
             </e>
           </e>
         </e>
+        <e p="PageObjects" t="Include">
+          <e p="Body.cs" t="Include" />
+          <e p="CardPage.cs" t="Include" />
+          <e p="PageObjectBase.cs" t="Include" />
+          <e p="ProductPage.cs" t="Include" />
+        </e>
         <e p="SeleniumTest1.csproj" t="IncludeRecursive" />
-        <e p="UnitTest1.cs" t="Include" />
+        <e p="Test" t="Include">
+          <e p="OrderTest.cs" t="Include" />
+        </e>
       </e>
       <e p="SeleniumTest1.sln" t="IncludeFlat" />
     </e>

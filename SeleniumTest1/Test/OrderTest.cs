@@ -6,15 +6,16 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using SeleniumTests.PageObjects;
+
 
 namespace SeleniumTests
 {
     [TestFixture]
-    public class SeleniumTest3
+    public class OrderTests
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
-        private string baseURL;
         private bool acceptNextAlert = true;
         private static readonly TimeSpan ImplicitWait = TimeSpan.FromSeconds(4);
         
@@ -22,9 +23,17 @@ namespace SeleniumTests
         public void SetupTest()
         {
             driver = new ChromeDriver();
-            
-            baseURL = "https://www.google.com/";
             verificationErrors = new StringBuilder();
+            driver.Manage().Window.Maximize();
+            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
+            driver.Navigate().GoToUrl("http://automationpractice.com/index.php");
+            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
+            Body mainPage = new Body(driver);
+            ProductPage productPage = mainPage.ClickOnItem();
+            productPage.ClickOnAddToCardButton();
+            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
+            productPage.ClickOnProceedToCheckout();
+            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
         }
         
         [TearDown]
@@ -40,24 +49,48 @@ namespace SeleniumTests
             }
             Assert.AreEqual("", verificationErrors.ToString());
         }
-        
+
         [Test]
-        public void TheUntitledTestCaseTest()
+        public void AddItemToCardTest()
         {
-            driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
-            driver.Navigate().GoToUrl("http://automationpractice.com/index.php");
-            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
-            driver.FindElement(By.XPath("//img[@alt='Blouse']")).Click();
-            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
-            driver.FindElement(By.XPath("//p[@id='add_to_cart']/button/span")).Click();
-            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
-            driver.FindElement(By.XPath("//div[@id='layer_cart']/div/div[2]/div[4]/a/span")).Click();
-            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
-            driver.FindElement(By.XPath("//a[@id='2_7_0_0']/i")).Click();
-            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
+            
+            
+            
+            //driver.FindElement(By.XPath("//a[@id='2_7_0_0']/i")).Click();
+
+            //driver.FindElement(By.LinkText("Blouse"));
+            
+            
+            try
+            {
+                Assert.AreEqual("Blouse", driver.FindElement(By.LinkText("Blouse")).Text);
+            }
+            catch (AssertionException e)
+            {
+                verificationErrors.Append(e.Message);
+            }
             
         }
+
+        [Test]
+        public void AddAndDeleteItemFromCardTest()
+        {
+            
+            CardPage cardPage = new CardPage(driver);
+            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
+            cardPage.ClickOnDeleteButton();
+            driver.Manage().Timeouts().ImplicitWait = ImplicitWait;
+
+            try
+            {
+                Assert.AreEqual(driver.FindElement(By.XPath("//*[@id='center_column']/p")), driver.FindElement(By.XPath("//*[@id='center_column']/p")));
+            }
+            catch (AssertionException e)
+            {
+                verificationErrors.Append(e.Message);
+            }
+        }
+
         private bool IsElementPresent(By by)
         {
             try
